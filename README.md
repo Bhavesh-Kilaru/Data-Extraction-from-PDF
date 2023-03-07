@@ -62,12 +62,12 @@ status() - This function accepts the database as an input parameter and print th
 	
 		   call statement :- status(db)
 
-#Execution of the program.
+# Execution of the program.
 
 To exeute the program from the console,	execute the following command in console
 <br />pipenv run python project0/main.py --incidents https://www.normanok.gov/sites/default/files/documents/2023-01/2023-01-01_daily_incident_summary.pdf
 
-#Execution of test case
+# Execution of test case
 Execute the following command in the console
 <br /> pipenv run python -m pytest
 
