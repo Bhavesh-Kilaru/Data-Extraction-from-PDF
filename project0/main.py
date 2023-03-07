@@ -75,13 +75,20 @@ def extractincidents(incident_data):
                 for i in range(3, len(split) - 1):
                     temp_holder += " " + split[i]
 
-                Address_splitter = re.split(
-                    r'( BLVD| AVE| DR E| WAY| RD| ST| NE| LN| SE| PL| NW| CT| HWY| NR E| SW| DR| NB I| CIR| PKWY| TERR| TER| GRAY| <UNKNOWN>| SH 9|35.2324983333333;-97.4057433333333|35.2057133333333;-97.447475|79TH/DOUGLAS)+',
-                    temp_holder)
+                Address_splitter = re.split(r'( BLVD| AVE| DR E| WAY| RD| ST| NE| LN| SE| PL| NW| CT| HWY| NR E| SW| DR| NB I| CIR| PKWY| TERR| TER| GRAY| MAIN| <UNKNOWN>| SH 9|DOUGLAS)+', temp_holder)
+
                 nature = Address_splitter[-1].strip()
                 address = ''
-                for i in range(len(Address_splitter) - 1):
-                    address += ' ' + Address_splitter[i].strip() + ' '
+                for i in range(len(Address_splitter)-1):
+                    address += ' ' +Address_splitter[i].strip() + ' '
+                    
+                if address == "":
+                    address = re.split(' ', nature)[0]
+                    
+                    temp = ''
+                    for i in re.split(' ', nature)[1:]:
+                        temp += i + " "
+                    nature = temp.strip()
 
                 incidents.append(
                     [Date_Time, Incident_number, address, nature, Inc_Ori])
@@ -120,6 +127,8 @@ def populatedb(db, incidents):
         cur = con.cursor()
 
         for i in incidents:
+            if i[3] == '':
+                i[3] = 'Null'
             cur.execute("INSERT into incidents VALUES (?,?,?,?,?)" , (i))
         con.commit()
         con.close()
@@ -139,8 +148,8 @@ def status(db):
 
         for row in records:
             temp = row[0]
-            if temp == "":
-                temp = 'NULL'
+           #if temp == "":
+           #     temp = 'NULL'
             print(f"{temp} | {row[1]}")
 
         cur.execute("DROP TABLE incidents;")
